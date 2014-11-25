@@ -86,4 +86,20 @@ var _ = Describe("SupportPlugin", func() {
 			Expect(answer).To(BeFalse())
 		})
 	})
+	Describe("PromptForString", func() {
+		PromptForInput := func(input string) ([]string, []string) {
+			var answer []string
+			output := io_helpers.CaptureOutput(func() {
+				io_helpers.SimulateStdin(input, func(r io.Reader) {
+					answer = PromptForString(r, "Enter something profound...")
+				})
+			})
+			return output, answer
+		}
+		It("returns the string the user typed", func() {
+			output, answer := PromptForInput("Hello World!\n")
+			Expect(output).To(ContainElement(ContainSubstring("Enter something profound...")))
+			Expect(answer).To(ContainElement("Hello World!"))
+		})
+	})
 })
