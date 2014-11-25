@@ -4,12 +4,12 @@ import (
 	"github.com/cloudfoundry/cli/plugin"
 )
 
-type Support struct{}
+type SupportPlugin struct{}
 
-func (c *Support) Run(cliConnection plugin.CliConnection, args []string) {
+func (c *SupportPlugin) Run(cliConnection plugin.CliConnection, args []string) {
 }
 
-func (c *Support) GetMetadata() plugin.PluginMetadata {
+func (c *SupportPlugin) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
 		Name: "Support",
 		Commands: []plugin.Command{
@@ -22,5 +22,5 @@ func (c *Support) GetMetadata() plugin.PluginMetadata {
 }
 
 func main() {
-	plugin.Start(new(Support))
+	plugin.Start(new(SupportPlugin))
 }
