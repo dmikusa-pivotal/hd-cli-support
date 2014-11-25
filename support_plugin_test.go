@@ -31,5 +31,21 @@ var _ = Describe("SupportPlugin", func() {
 		It("creates a ticket log", func() {
 			Expect(supportPlugin.TicketLog).ShouldNot(BeNil())
 		})
+
+		It("prints a greeting", func() {
+			output := io_helpers.CaptureOutput(func() {
+				supportPlugin.Run(fakeCliConnection, []string{})
+			})
+			Expect(output[0]).To(ContainSubstring("Don't Panic!"))
+		})
+
+		It("prints ticket log", func() {
+			output := io_helpers.CaptureOutput(func() {
+				supportPlugin.Run(fakeCliConnection, []string{})
+			})
+			Expect(output[4]).To(ContainSubstring("## Output from `target`"))
+			Expect(output[8]).To(ContainSubstring("## Output from `apps`"))
+			Expect(output[12]).To(ContainSubstring("## Output from `services`"))
+		})
 	})
 })

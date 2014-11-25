@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cloudfoundry/cli/plugin"
 	"github.com/dmikusa-pivotal/support_plugin/ticket_log"
+	"io/ioutil"
 )
 
 type SupportPlugin struct {
@@ -23,12 +24,15 @@ func runSingleCommand(cliConnection plugin.CliConnection, cmd string) (te ticket
 }
 
 func (sp *SupportPlugin) Run(cliConnection plugin.CliConnection, args []string) {
-	fmt.Println("Don't Panic!  We're gathering some information. Please hold.")
+	fmt.Println("Don't Panic!  We're gathering some information. Please hold.\n")
 	sp.TicketLog = ticket_log.NewTicketLog()
 	sp.TicketLog.Append(runSingleCommand(cliConnection, "target"))
 	sp.TicketLog.Append(runSingleCommand(cliConnection, "apps"))
 	sp.TicketLog.Append(runSingleCommand(cliConnection, "services"))
-	fmt.Println("Ticket data has been gathered.  It's located here: ", sp.TicketLog.Name)
+	fmt.Println("We've gathered the following information.  Please review.\n")
+	data, _ := ioutil.ReadFile(sp.TicketLog.Name)
+	fmt.Println(string(data[:]))
+	fmt.Println("")
 }
 
 func (c *SupportPlugin) GetMetadata() plugin.PluginMetadata {
