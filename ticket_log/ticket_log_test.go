@@ -1,8 +1,8 @@
-package main_test
+package ticket_log_test
 
 import (
 	"bytes"
-	. "github.com/dmikusa-pivotal/support-plugin"
+	. "github.com/dmikusa-pivotal/support_plugin/ticket_log"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -43,7 +43,7 @@ var _ = Describe("TicketLog", func() {
 		It("can write with a body", func() {
 			tl.Append(TicketEntry{
 				Description: "Hello World!",
-				Body:        []byte("Some body text"),
+				Body:        []string{"Some body text", "Some more body"},
 			})
 			resp, _ := buf.ReadString('\n')
 			Expect("## Hello World!\n").Should(Equal(resp))
@@ -51,6 +51,8 @@ var _ = Describe("TicketLog", func() {
 			Expect("```")
 			resp, _ = buf.ReadString('\n')
 			Expect("Some body text")
+			resp, _ = buf.ReadString('\n')
+			Expect("Some more body")
 			resp, _ = buf.ReadString('\n')
 			Expect("```")
 		})

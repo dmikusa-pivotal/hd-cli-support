@@ -1,4 +1,4 @@
-package main
+package ticket_log
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 type TicketEntry struct {
 	Description string
-	Body        []byte
+	Body        []string
 }
 
 type TicketLog struct {
@@ -27,6 +27,8 @@ func NewTicketLog() (tl TicketLog) {
 func (tl TicketLog) Append(te TicketEntry) {
 	io.WriteString(tl.Writer, fmt.Sprintf("## %s\n", te.Description))
 	io.WriteString(tl.Writer, "```\n")
-	tl.Writer.Write(te.Body)
+	for _, item := range te.Body {
+		io.WriteString(tl.Writer, fmt.Sprintf("%s\n", item))
+	}
 	io.WriteString(tl.Writer, "```\n")
 }
