@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/cloudfoundry/cli/plugin"
-	"github.com/dmikusa-pivotal/support_plugin/ticket_log"
+	"./ticket_log"
 	"github.com/sendgrid/sendgrid-go"
 	"io"
 	"io/ioutil"
@@ -66,13 +66,19 @@ func PromptForString(reader io.Reader, question string) []string {
 func (sp *SupportPlugin) OpenTicket() {
 	sg := sendgrid.NewSendGridClient("NDYOh17LQH", "wxjUSNDqKb")
 	message := sendgrid.NewMail()
-	message.AddTo("dmikusa@pivotal.io")
+	message.AddTo("svennela@pivotal.io")
 	message.AddToName("Pivotal Support")
 	message.SetSubject("New CF Support Ticket")
 	message.SetText("New Ticket from User.  See attachment.")
+	fi, err := os.Open(sp.TicketLog.Name)
+	 if err != nil {
+        panic(err)
+    }
+	r := bufio.NewReader(fi)
+
+	message.AddAttachment(sp.TicketLog.Name, r)
 	message.SetFrom("support@run.pivotal.io")
-    message.AddAttachment(sp.TicketLog.Name, 
-	if r := sg.Send(message); r == nil {
+    if r := sg.Send(message); r == nil {
 		fmt.Println("Ticket Opened!  You should receive an email confirmation shortly.")
 	} else {
 		fmt.Println(r)
