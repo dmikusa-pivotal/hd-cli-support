@@ -22,10 +22,10 @@ var _ = Describe("SupportPlugin", func() {
 			io_helpers.CaptureOutput(func() {
 				supportPlugin.Run(fakeCliConnection, []string{})
 			})
-			Expect(fakeCliConnection.CliCommandCallCount()).To(Equal(3))
-			Expect(fakeCliConnection.CliCommandArgsForCall(0)[0]).To(Equal("target"))
-			Expect(fakeCliConnection.CliCommandArgsForCall(1)[0]).To(Equal("apps"))
-			Expect(fakeCliConnection.CliCommandArgsForCall(2)[0]).To(Equal("services"))
+			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputCallCount()).To(Equal(3))
+			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputArgsForCall(0)[0]).To(Equal("target"))
+			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputArgsForCall(1)[0]).To(Equal("apps"))
+			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputArgsForCall(2)[0]).To(Equal("services"))
 		})
 
 		It("creates a ticket log", func() {

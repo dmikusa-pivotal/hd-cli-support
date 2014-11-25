@@ -11,7 +11,7 @@ type SupportPlugin struct {
 }
 
 func runSingleCommand(cliConnection plugin.CliConnection, cmd string) (te ticket_log.TicketEntry) {
-	output, err := cliConnection.CliCommand(cmd)
+	output, err := cliConnection.CliCommandWithoutTerminalOutput(cmd)
 	if err != nil {
 		fmt.Println("Plugin Error:", err)
 	}
