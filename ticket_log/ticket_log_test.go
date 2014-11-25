@@ -43,7 +43,7 @@ var _ = Describe("TicketLog", func() {
 		It("can write with a body", func() {
 			tl.Append(TicketEntry{
 				Description: "Hello World!",
-				Body:        []string{"Some body text", "Some more body"},
+				Body:        []string{"Some body text\n", "Some more body\n"},
 			})
 			resp, _ := buf.ReadString('\n')
 			Expect("## Hello World!\n").Should(Equal(resp))
