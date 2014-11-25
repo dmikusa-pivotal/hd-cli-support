@@ -30,5 +30,5 @@ func (tl TicketLog) Append(te TicketEntry) {
 	for _, item := range te.Body {
 		io.WriteString(tl.Writer, fmt.Sprintf("%s", item))
 	}
-	io.WriteString(tl.Writer, "```\n")
+	io.WriteString(tl.Writer, "```\n\n")
 }
