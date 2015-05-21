@@ -86,37 +86,39 @@ func (sp *SupportPlugin) OpenTicket() {
 }
 
 func (sp *SupportPlugin) Run(cliConnection plugin.CliConnection, args []string) {
-	fmt.Println("Don't Panic!  We're gathering some information. Please hold.\n")
-	sp.TicketLog = ticket_log.NewTicketLog()
-	sp.TicketLog.Append(runSingleCommand(cliConnection, "target"))
-	sp.TicketLog.Append(runSingleCommand(cliConnection, "apps"))
-	sp.TicketLog.Append(runSingleCommand(cliConnection, "services"))
-	ans := PromptForYesNo(os.Stdin,
-		"Are you currently experiencing a problem with one appliation in particular?")
-	if ans {
-		// TODO: check that app name exists
-		// TODO: print list of known apps
-		appName := PromptForString(os.Stdin,
-			"Please enter the name of the failing application?")
-		sp.TicketLog.Append(runSingleCommand(cliConnection, "app", appName[0]))
-		sp.TicketLog.Append(runSingleCommand(cliConnection, "logs", appName[0], "--recent"))
-	}
-	description := PromptForString(os.Stdin,
-		"Please enter anything else you'd like to mention about the issue.")
-	sp.TicketLog.Append(ticket_log.TicketEntry{
-		Description: "Customer's Problem Summary",
-		Body:        description,
-	})
-	fmt.Println("We've gathered the following information.  Please review.\n")
-	fmt.Println("-------------------------------------------------------------")
-	data, _ := ioutil.ReadFile(sp.TicketLog.Name)
-	fmt.Println(string(data[:]))
-	fmt.Println("-------------------------------------------------------------")
-	fmt.Println("")
-	openTicket := PromptForYesNo(os.Stdin,
-		"Last chance, are you sure you want to open a ticket?")
-	if openTicket {
-		sp.OpenTicket()
+	if args[0] == "help-me" {
+		fmt.Println("Don't Panic!  We're gathering some information. Please hold.\n")
+		sp.TicketLog = ticket_log.NewTicketLog()
+		sp.TicketLog.Append(runSingleCommand(cliConnection, "target"))
+		sp.TicketLog.Append(runSingleCommand(cliConnection, "apps"))
+		sp.TicketLog.Append(runSingleCommand(cliConnection, "services"))
+		ans := PromptForYesNo(os.Stdin,
+			"Are you currently experiencing a problem with one appliation in particular?")
+		if ans {
+			// TODO: check that app name exists
+			// TODO: print list of known apps
+			appName := PromptForString(os.Stdin,
+				"Please enter the name of the failing application?")
+			sp.TicketLog.Append(runSingleCommand(cliConnection, "app", appName[0]))
+			sp.TicketLog.Append(runSingleCommand(cliConnection, "logs", appName[0], "--recent"))
+		}
+		description := PromptForString(os.Stdin,
+			"Please enter anything else you'd like to mention about the issue.")
+		sp.TicketLog.Append(ticket_log.TicketEntry{
+			Description: "Customer's Problem Summary",
+			Body:        description,
+		})
+		fmt.Println("We've gathered the following information.  Please review.\n")
+		fmt.Println("-------------------------------------------------------------")
+		data, _ := ioutil.ReadFile(sp.TicketLog.Name)
+		fmt.Println(string(data[:]))
+		fmt.Println("-------------------------------------------------------------")
+		fmt.Println("")
+		openTicket := PromptForYesNo(os.Stdin,
+			"Last chance, are you sure you want to open a ticket?")
+		if openTicket {
+			sp.OpenTicket()
+		}
 	}
 }
 
