@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/cloudfoundry/cli/plugin"
-	"./ticket_log"
+	"github.com/dmikusa-pivotal/support_plugin/ticket_log"
 	"github.com/sendgrid/sendgrid-go"
 	"io"
 	"io/ioutil"
@@ -64,21 +64,21 @@ func PromptForString(reader io.Reader, question string) []string {
 }
 
 func (sp *SupportPlugin) OpenTicket() {
-	sg := sendgrid.NewSendGridClient("NDYOh17LQH", "wxjUSNDqKb")
+	sg := sendgrid.NewSendGridClient("uJgAGdippC", "2AyGJ6Wc3d")
 	message := sendgrid.NewMail()
 	message.AddTo("svennela@pivotal.io")
 	message.AddToName("Pivotal Support")
 	message.SetSubject("New CF Support Ticket")
 	message.SetText("New Ticket from User.  See attachment.")
 	fi, err := os.Open(sp.TicketLog.Name)
-	 if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 	r := bufio.NewReader(fi)
 
 	message.AddAttachment(sp.TicketLog.Name, r)
 	message.SetFrom("support@run.pivotal.io")
-    if r := sg.Send(message); r == nil {
+	if r := sg.Send(message); r == nil {
 		fmt.Println("Ticket Opened!  You should receive an email confirmation shortly.")
 	} else {
 		fmt.Println(r)
@@ -98,9 +98,8 @@ func (sp *SupportPlugin) Run(cliConnection plugin.CliConnection, args []string) 
 		// TODO: print list of known apps
 		appName := PromptForString(os.Stdin,
 			"Please enter the name of the failing application?")
-		// TODO: broken, failing with multi argument cf commands
-		sp.TicketLog.Append(runSingleCommand(cliConnection, fmt.Sprintf("app %s", appName[0])))
-		sp.TicketLog.Append(runSingleCommand(cliConnection, fmt.Sprintf("logs %s --recent", appName[0])))
+		sp.TicketLog.Append(runSingleCommand(cliConnection, "app", appName[0]))
+		sp.TicketLog.Append(runSingleCommand(cliConnection, "logs", appName[0], "--recent"))
 	}
 	description := PromptForString(os.Stdin,
 		"Please enter anything else you'd like to mention about the issue.")
